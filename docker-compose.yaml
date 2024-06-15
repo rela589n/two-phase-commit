@@ -1,0 +1,63 @@
+version: '3.9'
+
+services:
+    db1:
+        image: postgres
+        restart: always
+        # set shared memory limit when using docker-compose
+        shm_size: 128mb
+        # or set shared memory limit when deploy via swarm stack
+        #volumes:
+        #  - type: tmpfs
+        #    target: /dev/shm
+        #    tmpfs:
+        #      size: 134217728 # 128*2^20 bytes = 128Mb
+        environment:
+            POSTGRES_PASSWORD: example
+        ports:
+            - '127.0.0.1:5431:5432'
+        volumes:
+            - "./my-postgres.conf:/etc/postgresql/postgresql.conf"
+        command: [ "postgres", "-c", "config_file=/etc/postgresql/postgresql.conf" ]
+    db2:
+        image: postgres
+        restart: always
+        # set shared memory limit when using docker-compose
+        shm_size: 128mb
+        # or set shared memory limit when deploy via swarm stack
+        #volumes:
+        #  - type: tmpfs
+        #    target: /dev/shm
+        #    tmpfs:
+        #      size: 134217728 # 128*2^20 bytes = 128Mb
+        environment:
+            POSTGRES_PASSWORD: example
+        ports:
+            - '127.0.0.1:5432:5432'
+        volumes:
+            - "./my-postgres.conf:/etc/postgresql/postgresql.conf"
+        command: [ "postgres", "-c", "config_file=/etc/postgresql/postgresql.conf" ]
+    db3:
+        image: postgres
+        restart: always
+        # set shared memory limit when using docker-compose
+        shm_size: 128mb
+        # or set shared memory limit when deploy via swarm stack
+        #volumes:
+        #  - type: tmpfs
+        #    target: /dev/shm
+        #    tmpfs:
+        #      size: 134217728 # 128*2^20 bytes = 128Mb
+        environment:
+            POSTGRES_PASSWORD: example
+        ports:
+            - '127.0.0.1:5433:5432'
+        volumes:
+            - "./my-postgres.conf:/etc/postgresql/postgresql.conf"
+        command: [ "postgres", "-c", "config_file=/etc/postgresql/postgresql.conf" ]
+
+    adminer:
+        image: adminer
+        restart: always
+        ports:
+            - 8080:8080
