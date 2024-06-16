@@ -20,5 +20,29 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    app.db_connections.first:
+        class: Amp\Postgres\PostgresConnection
+        factory: [ 'App\Service\ConnectionFactory', 'createFirstConnection' ]
+
+    app.db_connections.second:
+        class: Amp\Postgres\PostgresConnection
+        factory: [ 'App\Service\ConnectionFactory', 'createSecondConnection' ]
+
+    app.db_connections.coordinator:
+        class: Amp\Postgres\PostgresConnection
+        factory: [ 'App\Service\ConnectionFactory', 'createCoordinatorConnection' ]
+
+    app.transaction_coordinator:
+        class: App\Service\TransactionCoordinator
+        arguments:
+            - !service
+                class: App\TransactionState\MemoryCachedTransactionState
+                arguments:
+                    - !service
+                        class: App\TransactionState\PersistentTransactionState
+                        arguments: [ '@app.db_connections.coordinator' ]
+            - '@app.db_connections.first'
+            - '@app.db_connections.second'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
